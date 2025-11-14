@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import com.example.TaskApp.dto.CreateTaskRequest
+import com.example.TaskApp.dto.UpdateTaskRequest
+import org.springframework.web.bind.annotation.PatchMapping
 import java.util.UUID
 
 @RestController
 @RequestMapping("/tasks")
-class TaskControllers(
+class TaskController(
     private val service: TaskService
 ) {
 
@@ -36,7 +38,7 @@ class TaskControllers(
         return service.getTasks()
     }
 
-       @DeleteMapping("/{taskId}")
+    @DeleteMapping("/{taskId}")
     fun deleteTask(@PathVariable taskId: UUID) {
         service.delete(taskId)
     }
@@ -45,4 +47,12 @@ class TaskControllers(
     fun createTask(@RequestBody request: CreateTaskRequest): Task {
         return service.createTask(request)
     }
+
+    @PatchMapping("/{taskId}")
+    fun updateTask(
+    @PathVariable taskId: UUID,
+    @RequestBody request: UpdateTaskRequest
+    ): Task {
+    return service.updateTask(taskId, request)
+}
 }

@@ -1,6 +1,6 @@
 package com.example.TaskApp.services
-
-import com.example.TaskApp.dataSources.TaskRepository
+import com.example.TaskApp.dto.UpdateTaskRequest
+import com.example.TaskApp.repositories.TaskRepository
 import com.example.TaskApp.dto.CreateTaskRequest
 import com.example.TaskApp.model.Task
 import org.springframework.stereotype.Service
@@ -45,5 +45,14 @@ class TaskService(
 
     fun getTasksByDate(date: LocalDate): List<Task> {
         return repository.findByDueDate(date)
+    }
+
+    fun updateTask(id: UUID, request: UpdateTaskRequest): Task {
+        val task = getTaskById(id) 
+        request.name?.let { task.name = it }
+        request.description?.let { task.description = it }
+        request.dueDate?.let { task.dueDate = it }
+        request.status?.let { task.status = it }
+        return repository.save(task) 
     }
 }

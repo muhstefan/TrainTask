@@ -8,15 +8,8 @@
     <h1>Задачи на <span th:text="${date}">дата</span></h1>
     <a href="/page/tasks-by-date">Назад</a>
     
-    <ul>
-        <li th:each="task : ${tasks}">
-            <strong th:text="${task.name}"></strong> - 
-            <span th:text="${task.description}"></span>
-            <form method="post" th:action="'/page/tasks/' + ${task.id} + '?returnDate=' + ${date}" style="display:inline;">
-                <input type="hidden" name="_method" value="DELETE">
-                <button type="submit">Удалить</button>
-            </form>
-        </li>
-    </ul>
+    <div th:replace="~{parts/task-list :: task-list(${tasks}, ${date})}"></div>
+
+    <div th:replace="~{parts/task-list :: task-status-script}"></div>
 </body>
 </html>

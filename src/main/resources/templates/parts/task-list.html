@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <ul th:fragment="task-list(tasks, returnDate)">
+        <li th:each="task : ${tasks}">
+            <input type="checkbox" 
+                   th:checked="${task.status.name() == 'COMPLETE'}"
+                   th:data-task-id="${task.id}"
+                   onchange="toggleStatus(this)">
+            <strong th:text="${task.name}"></strong> - 
+            <span th:text="${task.description}"></span>
+            <form method="post" 
+                  th:action="'/page/tasks/' + ${task.id} + (${returnDate != null} ? '?returnDate=' + ${returnDate} : '')" 
+                  style="display:inline;">
+                <input type="hidden" name="_method" value="DELETE">
+                <button type="submit">Удалить</button>
+            </form>
+        </li>
+    </ul>
+
+    <script th:fragment="task-status-script">
+        function toggleStatus(checkbox) {
+            const taskId = checkbox.getAttribute('data-task-id');
+            const status = checkbox.checked ? 'COMPLETE' : 'WAITING';
+            
+            fetch(`/tasks/${taskId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ status: status })
+            }).then(() => {
+                location.reload();
+            });
+        }
+    </script>
+</body>
+</html>

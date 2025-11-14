@@ -1,4 +1,4 @@
-package com.example.TaskApp.dataSources
+package com.example.TaskApp.repositories
 
 import com.example.TaskApp.model.Task
 import org.springframework.data.jpa.repository.JpaRepository
