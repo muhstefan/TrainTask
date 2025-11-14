@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Создать задачу</title>
+</head>
+<body>
+    <h1>Создать задачу</h1>
+    <a href="/page/">Назад</a>
+    
+    <form method="post" action="/page/create">
+        <label>Название: <input type="text" name="name" required></label><br>
+        <label>Описание: <textarea name="description" required></textarea></label><br>
+        <label>Дата: <input type="date" name="dueDate" required></label><br>
+        <button type="submit">Создать</button>
+    </form>
+</body>
+</html>

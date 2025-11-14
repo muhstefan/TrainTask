@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Task App</title>
+</head>
+<body>
+    <h1>Task App</h1>
+    <p th:if="${message}" th:text="${message}"></p>
+    <p><a href="/page/create">Создать задачу</a></p>
+    <p><a href="/page/tasks-by-date">Вывести по дням</a></p>
+</body>
+</html>

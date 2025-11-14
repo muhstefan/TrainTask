@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Задачи по дням</title>
+</head>
+<body>
+    <h1>Задачи по дням</h1>
+    <a href="/page/">Назад</a>
+    
+    <div th:each="entry : ${tasksByDate}">
+        <h2><a th:href="@{/page/tasks-by-date(date=${entry.key})}" th:text="${entry.key}">Дата</a></h2>
+        <ul>
+            <li th:each="task : ${entry.value}">
+                <strong th:text="${task.name}"></strong> - 
+                <span th:text="${task.description}"></span>
+                <form method="post" th:action="'/page/tasks/' + ${task.id}">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit">Удалить</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>
