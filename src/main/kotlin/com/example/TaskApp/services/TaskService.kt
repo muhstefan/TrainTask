@@ -6,7 +6,7 @@ import com.example.TaskApp.model.Task
 import org.springframework.stereotype.Service
 import java.util.UUID
 import java.time.LocalDate
-
+import java.time.LocalDateTime
 
 @Service
 class TaskService(
@@ -33,25 +33,26 @@ class TaskService(
         val task = Task()
         task.name = request.name
         task.description = request.description
-        task.dueDate = request.dueDate
+        task.dueDateTime = request.dueDateTime 
         return repository.save(task)
     }
 
     fun getTasksGroupedByDate(): Map<LocalDate, List<Task>> {
         return repository.findAll()
-            .groupBy { it.dueDate }
+            .groupBy { it.dueDateTime.toLocalDate() }
             .toSortedMap()
     }
 
     fun getTasksByDate(date: LocalDate): List<Task> {
-        return repository.findByDueDate(date)
+        return repository.findAll()
+            .filter { it.dueDateTime.toLocalDate() == date } 
     }
 
     fun updateTask(id: UUID, request: UpdateTaskRequest): Task {
         val task = getTaskById(id) 
         request.name?.let { task.name = it }
         request.description?.let { task.description = it }
-        request.dueDate?.let { task.dueDate = it }
+        request.dueDateTime?.let { task.dueDateTime = it }
         request.status?.let { task.status = it }
         return repository.save(task) 
     }

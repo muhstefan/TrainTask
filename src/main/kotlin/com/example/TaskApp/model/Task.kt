@@ -8,7 +8,7 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.UUID
 
 enum class TaskStatus {
@@ -31,12 +31,11 @@ open class Task {
     @Column(name = "description", nullable = false)
     open var description: String = ""
 
-    @Column(name = "due_date", nullable = false) 
-    lateinit var dueDate: LocalDate  
+    @Column(name = "due_date_time", nullable = false) 
+    lateinit var dueDateTime: LocalDateTime  
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     open var status: TaskStatus = TaskStatus.WAITING
-
 
 }
