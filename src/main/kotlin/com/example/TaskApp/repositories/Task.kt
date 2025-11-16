@@ -1,5 +1,6 @@
-package com.example.TaskApp.model
+package com.example.TaskApp.repositories
 
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -7,6 +8,7 @@ import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import java.time.LocalDateTime
 import java.util.UUID
@@ -38,4 +40,6 @@ open class Task {
     @Column(name = "status", nullable = false)
     open var status: TaskStatus = TaskStatus.WAITING
 
+    @OneToMany(mappedBy = "task", cascade = [CascadeType.ALL], orphanRemoval = true)
+    open var comments: MutableList<Comment> = mutableListOf()
 }

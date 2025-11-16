@@ -1,6 +1,6 @@
 package com.example.TaskApp.dto
 
-import com.example.TaskApp.model.TaskStatus
+import com.example.TaskApp.repositories.TaskStatus
 import java.time.LocalDateTime  
 import org.springframework.format.annotation.DateTimeFormat
 

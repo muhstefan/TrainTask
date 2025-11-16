@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Детали задачи</title>
+</head>
+<body>
+    <h1 th:text="${task.name}">Название задачи</h1>
+    <a href="/page/tasks-by-date">Назад к списку</a>
+    
+    <div th:if="${message}" th:text="${message}" style="color: green;"></div>
+    
+    <div>
+        <h2>Описание</h2>
+        <p th:text="${task.description}">Описание задачи</p>
+    </div>
+    
+    <div>
+        <h2>Срок выполнения</h2>
+        <p th:text="${#temporals.format(task.dueDateTime, 'dd.MM.yyyy HH:mm')}">Дата</p>
+    </div>
+    
+    <div>
+        <h2>Статус</h2>
+        <p th:text="${task.status.name()}">Статус</p>
+    </div>
+    
+    <div>
+        <h2>Комментарии</h2>
+        
+        <ul th:if="${task.comments != null and !task.comments.isEmpty()}">
+            <li th:each="comment : ${task.comments}">
+                <p th:text="${comment.text}">Текст комментария</p>
+                <small th:text="${#temporals.format(comment.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</small>
+            </li>
+        </ul>
+        <p th:if="${task.comments == null or task.comments.isEmpty()}">Комментариев пока нет</p>
+        
+        <form th:action="@{/page/tasks/{id}/comments(id=${task.id})}" method="post">
+            <textarea name="text" placeholder="Введите комментарий" required></textarea>
+            <br>
+            <button type="submit">Добавить комментарий</button>
+        </form>
+    </div>
+</body>
+</html>
