@@ -1,6 +1,7 @@
 package com.example.TaskApp.controllers
 
-import com.example.TaskApp.model.Task
+import com.example.TaskApp.dto.CreateCommentRequest
+import com.example.TaskApp.repositories.Task
 import com.example.TaskApp.services.TaskService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -54,5 +55,14 @@ class TaskController(
     @RequestBody request: UpdateTaskRequest
     ): Task {
     return service.updateTask(taskId, request)
-}
+    }
+
+    @PostMapping("/{taskId}/comments")
+    fun addComment(
+        @PathVariable taskId: UUID,
+        @RequestBody request: CreateCommentRequest
+    ): Task {
+        return service.addCommentToTask(taskId, request.text)
+    }
+
 }

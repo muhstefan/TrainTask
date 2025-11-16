@@ -7,8 +7,20 @@
                    th:checked="${task.status.name() == 'COMPLETE'}"
                    th:data-task-id="${task.id}"
                    onchange="toggleStatus(this)">
-            <strong th:text="${task.name}"></strong> - 
+             <a th:href="@{/page/tasks/{id}(id=${task.id})}">
+                <strong th:text="${task.name}"></strong>
+            </a>
+            - 
             <span th:text="${task.description}"></span>
+            
+            <!-- Поле для редактирования времени -->
+            <input type="datetime-local" 
+            th:id="'datetime-' + ${task.id}"
+            th:value="${#temporals.format(task.dueDateTime, &quot;yyyy-MM-dd'T'HH:mm&quot;)}"
+            th:data-task-id="${task.id}"
+            onchange="updateDateTime(this)"
+            style="margin-left: 10px;">
+            
             <form method="post" 
                   th:action="'/page/tasks/' + ${task.id} + (${returnDate != null} ? '?returnDate=' + ${returnDate} : '')" 
                   style="display:inline;">
@@ -30,6 +42,32 @@
                 },
                 body: JSON.stringify({ status: status })
             }).then(() => {
+                location.reload();
+            });
+        }
+        
+        // Новая функция для обновления времени
+        function updateDateTime(input) {
+            const taskId = input.getAttribute('data-task-id');
+            const newDateTime = input.value; // Формат: "2025-11-15T07:00"
+            
+            fetch(`/tasks/${taskId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ dueDateTime: newDateTime })
+            }).then(response => {
+                if (response.ok) {
+                    console.log('Время обновлено');
+                    // Можно показать уведомление или обновить только нужную часть
+                } else {
+                    alert('Ошибка при обновлении времени');
+                    location.reload(); // Перезагрузить при ошибке
+                }
+            }).catch(error => {
+                console.error('Ошибка:', error);
+                alert('Ошибка при обновлении времени');
                 location.reload();
             });
         }

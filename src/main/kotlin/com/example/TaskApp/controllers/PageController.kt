@@ -42,7 +42,7 @@ class PageController(
     ): String {
         val task = service.createTask(request)
         redirectAttributes.addFlashAttribute("message", "Задача создана! ID: ${task.id}")
-        return "redirect:/page/"
+        return "redirect:/page/tasks-by-date"  // ← Редирект на список задач вместо "/page/"
     }
 
 
@@ -63,6 +63,16 @@ class PageController(
         return "tasks-by-day"
     }
 
+    @GetMapping("/tasks/{taskId}")
+    fun viewTaskDetail(
+        @PathVariable taskId: UUID,
+        model: Model
+    ): String {
+        val task = service.getTaskWithComments(taskId) 
+        model.addAttribute("task", task)
+        return "task-detail"
+    }
+
     @DeleteMapping("/tasks/{taskId}")
     fun deleteTask(
         @PathVariable taskId: UUID,
@@ -71,5 +81,16 @@ class PageController(
         service.delete(taskId)
         return returnDate?.let { "redirect:/page/tasks-by-date?date=$it" } 
             ?: "redirect:/page/tasks-by-date"
+    }
+
+    @PostMapping("/tasks/{taskId}/comments")
+    fun addComment(
+        @PathVariable taskId: UUID,
+        @RequestParam text: String,
+        redirectAttributes: RedirectAttributes
+    ): String {
+        service.addCommentToTask(taskId, text)
+        redirectAttributes.addFlashAttribute("message", "Комментарий добавлен")
+        return "redirect:/page/tasks/$taskId"  // ← Исправить: было redirect:/page/tasks/
     }
 }

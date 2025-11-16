@@ -1,5 +1,6 @@
-package com.example.TaskApp.model
+package com.example.TaskApp.repositories
 
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -7,8 +8,9 @@ import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.UUID
 
 enum class TaskStatus {
@@ -31,12 +33,13 @@ open class Task {
     @Column(name = "description", nullable = false)
     open var description: String = ""
 
-    @Column(name = "due_date", nullable = false) 
-    lateinit var dueDate: LocalDate  
+    @Column(name = "due_date_time", nullable = false) 
+    lateinit var dueDateTime: LocalDateTime  
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     open var status: TaskStatus = TaskStatus.WAITING
 
-
+    @OneToMany(mappedBy = "task", cascade = [CascadeType.ALL], orphanRemoval = true)
+    open var comments: MutableList<Comment> = mutableListOf()
 }
