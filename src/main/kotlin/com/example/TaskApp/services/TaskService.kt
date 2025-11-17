@@ -32,6 +32,10 @@ class TaskService(
     }
     
     fun createTask(request: CreateTaskRequest): Task {
+        if (request.dueDateTime.isBefore(LocalDateTime.now())) {
+            throw IllegalArgumentException("Дата выполнения не может быть в прошлом")
+        }
+        
         val task = Task()
         task.name = request.name
         task.description = request.description
@@ -39,7 +43,7 @@ class TaskService(
         return repository.save(task)
     }
     
-    @Transactional(readOnly = true) // Транзакция т.е
+    @Transactional(readOnly = true)
     fun getTaskWithComments(id: UUID): Task {
         return repository.findByIdWithComments(id)
             ?: throw NoSuchElementException("No Task found with id $id")

@@ -10,7 +10,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import java.time.LocalDate
 import java.util.*
 
-
 @Controller
 class HomeController {
     @GetMapping("/")
@@ -24,27 +23,31 @@ class HomeController {
 class PageController(
     private val service: TaskService
 ) {
-    
+
     @GetMapping("/")
     fun index(): String {
         return "index"
     }
-    
+
     @GetMapping("/create")
-    fun createForm(): String {
+    fun createForm(model: Model): String {
         return "create"
     }
-    
+
     @PostMapping("/create")
     fun createTask(
         @ModelAttribute request: CreateTaskRequest,
         redirectAttributes: RedirectAttributes
     ): String {
-        val task = service.createTask(request)
-        redirectAttributes.addFlashAttribute("message", "Задача создана! ID: ${task.id}")
-        return "redirect:/page/tasks-by-date"  // ← Редирект на список задач вместо "/page/"
+        try {
+            val task = service.createTask(request)
+            redirectAttributes.addFlashAttribute("message", "Задача создана! ID: ${task.id}")
+            return "redirect:/page/tasks-by-date"
+        } catch (e: IllegalArgumentException) {
+            redirectAttributes.addFlashAttribute("error", e.message)
+            return "redirect:/page/create"
+        }
     }
-
 
     @GetMapping("/tasks-by-date")
     fun tasksByDate(model: Model): String {
@@ -54,7 +57,7 @@ class PageController(
 
     @GetMapping("/tasks-by-date", params = ["date"])
     fun tasksByDate(
-        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) 
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         date: LocalDate,
         model: Model
     ): String {
@@ -68,7 +71,7 @@ class PageController(
         @PathVariable taskId: UUID,
         model: Model
     ): String {
-        val task = service.getTaskWithComments(taskId) 
+        val task = service.getTaskWithComments(taskId)
         model.addAttribute("task", task)
         return "task-detail"
     }
@@ -79,7 +82,7 @@ class PageController(
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) returnDate: LocalDate?
     ): String {
         service.delete(taskId)
-        return returnDate?.let { "redirect:/page/tasks-by-date?date=$it" } 
+        return returnDate?.let { "redirect:/page/tasks-by-date?date=$it" }
             ?: "redirect:/page/tasks-by-date"
     }
 
@@ -91,6 +94,6 @@ class PageController(
     ): String {
         service.addCommentToTask(taskId, text)
         redirectAttributes.addFlashAttribute("message", "Комментарий добавлен")
-        return "redirect:/page/tasks/$taskId"  // ← Исправить: было redirect:/page/tasks/
+        return "redirect:/page/tasks/$taskId"
     }
 }

@@ -3,10 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <title>Создать задачу</title>
+    <style>
+        .error {
+            color: red;
+            padding: 10px;
+            border: 1px solid red;
+            margin-bottom: 20px;
+            background-color: #ffe6e6;
+        }
+        .message {
+            color: green;
+            padding: 10px;
+            border: 1px solid green;
+            margin-bottom: 20px;
+            background-color: #e6ffe6;
+        }
+    </style>
 </head>
 <body>
     <h1>Создать задачу</h1>
     <a href="/page/">Назад</a>
+    
+    <!-- Показываем ошибку, если есть -->
+    <div th:if="${error}" class="error">
+        <strong>Ошибка:</strong> <span th:text="${error}"></span>
+    </div>
+    
+    <!-- Показываем сообщение об успехе, если есть -->
+    <div th:if="${message}" class="message">
+        <span th:text="${message}"></span>
+    </div>
     
     <form method="post" action="/page/create">
         <label>Название: <input type="text" name="name" required></label><br>

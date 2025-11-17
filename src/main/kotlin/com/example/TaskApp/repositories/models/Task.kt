@@ -15,7 +15,8 @@ import java.util.UUID
 
 enum class TaskStatus {
     WAITING,
-    COMPLETE
+    LATE,
+    COMPLETE,
 }
 
 @Table(name = "tasks")
