@@ -11,6 +11,36 @@ services:
       - "5432:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d taskBd"]
+      interval: 3s      # Проверка каждые 3 секунды
+      timeout: 3s
+      retries: 5        # 5 попыток
+      start_period: 7s
+    networks:
+      - app-network     # ← ДОБАВИТЬ ЭТУ СТРОКУ!
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: taskApp
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/taskBd
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: adminsecret
+    depends_on:
+      postgres:
+        condition: service_healthy  # Ждем, пока БД станет healthy
+    networks:
+      - app-network
 
 volumes:
   pg_data:
+
+networks:
+  app-network:
+    driver: bridge
