@@ -32,10 +32,7 @@ class TaskService(
     }
     
     fun createTask(request: CreateTaskRequest): Task {
-        if (request.dueDateTime.isBefore(LocalDateTime.now())) {
-            throw IllegalArgumentException("Дата выполнения не может быть в прошлом")
-        }
-        
+
         val task = Task()
         task.name = request.name
         task.description = request.description

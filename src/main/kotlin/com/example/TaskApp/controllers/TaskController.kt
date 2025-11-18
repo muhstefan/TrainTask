@@ -29,10 +29,6 @@ class TaskController(
         return ResponseEntity(e.message, HttpStatus.NOT_FOUND)
     }
 
-    @ExceptionHandler(IllegalArgumentException::class)
-    fun handleIllegalArgumentException(e:IllegalArgumentException) : ResponseEntity<String>{
-        return ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
-    }
 
     @GetMapping
     fun getTasks(): List<Task> {

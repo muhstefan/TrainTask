@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
+import jakarta.validation.constraints.NotBlank
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -28,6 +29,7 @@ open class Task {
     @Column(name = "id", nullable = false)
     open var id: UUID? = null
 
+    @NotBlank(message = "Название задачи обязательно")
     @Column(name = "name", nullable = false)
     open var name: String = ""
 

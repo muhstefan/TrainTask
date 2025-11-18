@@ -39,14 +39,9 @@ class PageController(
         @ModelAttribute request: CreateTaskRequest,
         redirectAttributes: RedirectAttributes
     ): String {
-        try {
-            val task = service.createTask(request)
-            redirectAttributes.addFlashAttribute("message", "Задача создана! ID: ${task.id}")
-            return "redirect:/page/tasks-by-date"
-        } catch (e: IllegalArgumentException) {
-            redirectAttributes.addFlashAttribute("error", e.message)
-            return "redirect:/page/create"
-        }
+        val task = service.createTask(request)
+        redirectAttributes.addFlashAttribute("message", "Задача создана! ID: ${task.id}")
+        return "redirect:/page/tasks-by-date"
     }
 
     @GetMapping("/tasks-by-date")
