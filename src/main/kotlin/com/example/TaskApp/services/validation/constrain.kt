@@ -4,7 +4,7 @@ import jakarta.validation.ConstraintValidator
 import jakarta.validation.ConstraintValidatorContext
 
 // Список запрещенных слов
-val words = listOf("слово1", "слово2", "слово3")
+val words = listOf("говно", "залупа", "пенис", "хер", "С++")
 
 class CustomValidator : ConstraintValidator<CustomConstraint, String> {
 

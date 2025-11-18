@@ -7,9 +7,12 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import org.springframework.validation.BindingResult
 import java.time.LocalDate
+import jakarta.validation.Valid 
 import java.util.*
 
+// Базовый редирект с корня
 @Controller
 class HomeController {
     @GetMapping("/")
@@ -36,9 +39,17 @@ class PageController(
 
     @PostMapping("/create")
     fun createTask(
-        @ModelAttribute request: CreateTaskRequest,
+        @Valid @ModelAttribute request: CreateTaskRequest,
+        bindingResult: BindingResult, // Наличие ошибок если есть
         redirectAttributes: RedirectAttributes
     ): String {
+        if (bindingResult.hasErrors()) {
+            // Берем первую ошибку
+            val firstError = bindingResult.fieldErrors.firstOrNull()
+            redirectAttributes.addFlashAttribute("error", firstError?.defaultMessage ?: "Ошибка валидации")
+            return "redirect:/page/create"
+        }
+        
         val task = service.createTask(request)
         redirectAttributes.addFlashAttribute("message", "Задача создана! ID: ${task.id}")
         return "redirect:/page/tasks-by-date"
