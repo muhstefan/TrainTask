@@ -1,5 +1,6 @@
 package com.example.TaskApp.repositories
 
+import com.example.validation.CustomConstraint
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -10,12 +11,16 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
+import jakarta.validation.constraints.Max
+import jakarta.validation.constraints.Min
+import jakarta.validation.constraints.NotBlank
 import java.time.LocalDateTime
 import java.util.UUID
 
 enum class TaskStatus {
     WAITING,
-    COMPLETE
+    LATE,
+    COMPLETE,
 }
 
 @Table(name = "tasks")
@@ -26,6 +31,7 @@ open class Task {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
     open var id: UUID? = null
+
 
     @Column(name = "name", nullable = false)
     open var name: String = ""
